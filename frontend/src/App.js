@@ -1,0 +1,187 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./App.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Button from "./components/Button";
+
+function App() {
+  const [taskname, setTask] = useState("");
+  const [fetchedTask, setFetchedTask] = useState([]);
+
+  useEffect(() => {
+    getTask();
+  }, []);
+
+  // Setters for Task
+  const handleInputChange = (e) => {
+    setTask(e.target.value);
+  };
+
+  // API call for storing Task
+  const storeTask = (e) => {
+    e.preventDefault();
+    const newTask = {
+      taskname,
+    };
+    if (newTask.taskname === "") {
+      toast.error("Please Enter the Task Name!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
+      return;
+    }
+    axios
+      .post("http://localhost:4000/todos", newTask)
+      .then((response) => {
+        getTask();
+        setTask("");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  // API call for fetching Task
+  const getTask = () => {
+    axios
+      .get("http://localhost:4000/todos")
+      .then((response) => {
+        setFetchedTask(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  // API call for deleting Task
+  const deleteTask = (id) => {
+    axios
+      .delete(`http://localhost:4000/todos/${id}`)
+      .then((response) => {
+        getTask();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  // API call for deleting all Tasks
+  const deleteAllTasks = () => {
+    axios
+      .delete(`http://localhost:4000/todos`)
+      .then((response) => {
+        console.log("All Tasks Deleted Successfully");
+        getTask();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  // API call for updating Task
+  const updateTask = (item) => {
+    const updatedTask = prompt("Enter Updated Task Name:", item.taskname);
+    if (updatedTask === null) {
+      return;
+    }
+    const newUpdatedTask = {
+      taskname: updatedTask,
+    };
+
+    axios
+      .put(`http://localhost:4000/todos/${item.id}`, newUpdatedTask)
+      .then((response) => {
+        getTask();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+  return (
+    <div>
+      <div className="flex justify-center items-center mt-5 flex-col">
+        <h1 className="text-2xl font-bold mb-5 bg-gray-200 rounded-sm p-1">
+          Todo App
+        </h1>
+        <form className="flex items-center justify-center gap-1">
+          <input
+            className="border-2 border-gray-700	rounded-md p-1"
+            placeholder="✍️ Add Task"
+            type="text"
+            name="taskname"
+            value={taskname}
+            onChange={handleInputChange}
+          />
+          <Button
+            name={"Store Task"}
+            handleClick={storeTask}
+            styleProp={"bg-green-500 border-green-700"}
+          />
+          <ToastContainer
+            position="top-left"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />{" "}
+        </form>
+        <br />
+      </div>
+      <div className="flex justify-center items-center"></div>
+      <div className="flex justify-center items-center flex-col mt-10">
+        <h2 className="text-xl font-bold">Todo List:</h2>
+        <ul>
+          {fetchedTask.map((item, index) => (
+            <li
+              key={index}
+              className="flex gap-5 justify-center items-center m-3 "
+            >
+              <span className="font-semibold text-lg">{++index + ". "}</span>
+              <span className="mr-10 font-semibold text-lg text-gray-800">
+                {item.taskname}
+              </span>
+              <Button
+                name={"Edit"}
+                handleClick={() => updateTask(item)}
+                styleProp={"bg-green-500 border-green-700 w-16"}
+              />
+              <Button
+                name={"Delete"}
+                handleClick={() => deleteTask(item.id)}
+                styleProp={"bg-red-500 border-red-700 w-16"}
+              />
+            </li>
+          ))}
+        </ul>
+        <div>
+          {fetchedTask.length > 0 ? (
+            <Button
+              name={" Delete All Tasks"}
+              handleClick={deleteAllTasks}
+              styleProp={"bg-red-500 border-red-700 mt-5"}
+            />
+          ) : (
+            <h1 className="font-semibold mt-5 text-red-500">
+              No Record Found!
+            </h1>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
