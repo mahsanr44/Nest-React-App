@@ -23,11 +23,11 @@ import { join } from 'path';
         database: configService.get('DB_NAME'),
         entities: [join(process.cwd(), 'dist/**/*.entity{.ts,.js}')],
         synchronize: true,
-      }), 
+      }),
       inject: [ConfigService],
     }),
-    TodosModule
-  ], 
+    TodosModule,
+  ],
   controllers: [AppController, CatsController],
   providers: [AppService, CatsService],
 })

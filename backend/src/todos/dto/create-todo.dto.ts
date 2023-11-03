@@ -1,3 +1,3 @@
 export class CreateTodoDto {
-    taskname: string;
+  taskname: string;
 }

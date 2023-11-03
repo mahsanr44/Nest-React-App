@@ -23,22 +23,21 @@ export class TodosService {
 
   async update(id: number, updateTodoDto: UpdateTodoDto) {
     const todo = await this.todoRepository.findOne({ where: { id } });
-    if(!todo){
-      console.log('no todo found')
+    if (!todo) {
+      console.log('no todo found');
       return null;
     }
     Object.assign(todo, updateTodoDto);
     return await this.todoRepository.save(todo);
-    
   }
 
   async remove(id: number) {
-const todo= await this.todoRepository.findOne({where:{id}});
-if(!todo) {
-  console.log('no todo found')
-  return `no todo found with id ${id}`;
-}    
-return await this.todoRepository.remove(todo);
+    const todo = await this.todoRepository.findOne({ where: { id } });
+    if (!todo) {
+      console.log('no todo found');
+      return `no todo found with id ${id}`;
+    }
+    return await this.todoRepository.remove(todo);
   }
 
   async removeAll() {
