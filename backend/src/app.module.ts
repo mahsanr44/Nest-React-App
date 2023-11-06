@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TodosModule } from './todos/todos.module';
 import { Todo } from './todos/entities/todo.entity';
 import { join } from 'path';
+import { IsUniqueConstrant } from './shared/validation/is-unique-constrant';
 
 @Module({
   imports: [
@@ -29,6 +30,6 @@ import { join } from 'path';
     TodosModule,
   ],
   controllers: [AppController, CatsController],
-  providers: [AppService, CatsService],
+  providers: [AppService, CatsService, IsUniqueConstrant],
 })
 export class AppModule {}

@@ -1,25 +1,30 @@
-import React, { useEffect, useState } from "react";
+"use client";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import axios from "axios";
-import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Button from "./components/Button";
+import Button from "./Button";
+
+interface Task {
+  id: number;
+  taskname: string;
+}
 
 function App() {
   const [taskname, setTask] = useState("");
-  const [fetchedTask, setFetchedTask] = useState([]);
+  const [fetchedTask, setFetchedTask] = useState<Task[]>([]);
 
   useEffect(() => {
     getTask();
   }, []);
 
   // Setters for Task
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTask(e.target.value);
   };
 
   // API call for storing Task
-  const storeTask = (e) => {
+  const storeTask = (e: FormEvent) => {
     e.preventDefault();
     const newTask = {
       taskname,
@@ -37,8 +42,7 @@ function App() {
       });
 
       return;
-    }
-    else if (fetchedTask.some(task => task.taskname === newTask.taskname) ){
+    } else if (fetchedTask.some((task) => task.taskname === newTask.taskname)) {
       toast.error(` Task "${newTask.taskname}" already exists!`, {
         position: "top-right",
         autoClose: 5000,
@@ -49,9 +53,9 @@ function App() {
         progress: undefined,
         theme: "dark",
       });
-      setTask("")
+      setTask("");
       return;
-    } else if (!isNaN(newTask.taskname)) {
+    } else if (!isNaN(Number(newTask.taskname))) {
       toast.error("Task Name Must be a String!", {
         position: "top-right",
         autoClose: 5000,
@@ -100,7 +104,7 @@ function App() {
   };
 
   // API call for deleting Task
-  const deleteTask = (id) => {
+  const deleteTask = (id: number) => {
     axios
       .delete(`http://localhost:4000/todos/${id}`)
       .then((response) => {
@@ -145,7 +149,7 @@ function App() {
   };
 
   // API call for updating Task
-  const updateTask = (item) => {
+  const updateTask = (item: Task) => {
     const updatedTask = prompt("Enter Updated Task Name:", item.taskname);
     if (
       updatedTask === null ||
@@ -162,6 +166,20 @@ function App() {
         progress: undefined,
         theme: "dark",
       });
+      return;
+    }
+    if (fetchedTask.some((task) => task.taskname === updatedTask)) {
+      toast.error(` Task "${updatedTask}" already exists!`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      setTask("");
       return;
     }
     const newUpdatedTask = {
@@ -226,7 +244,7 @@ function App() {
       <div className="flex justify-center items-center flex-col mt-10">
         <h2 className="text-xl font-bold">Todo List:</h2>
         <ul>
-          {fetchedTask.map((item, index) => (
+          {fetchedTask.map((item: Task, index) => (
             <li
               key={index}
               className="flex gap-5 justify-center items-center m-3 "

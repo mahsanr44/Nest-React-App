@@ -4,7 +4,7 @@
 - Request and Response Handler
 
 # Services
-- Service are responsible for data storage and retrieval, and used by the controller to handle requests.
+- Services are responsible for data storage and retrieval, and used by the controller to handle requests.
 
 # Modules
 - Modules are containers for different parts of an application, such as controllers, services,  and other related components.
@@ -26,4 +26,14 @@
 
 # Guards
 - This is often referred to as authorization. 
-* Guards are executed after all middleware, but before any interceptor or pipe.
+* Guards are executed after all middleware but before any interceptor or pipe.
+
+# Others
+
+-  Entity is Like Schema
+-In NestJS, the `@Injectable()` decorator is used to define a class as a provider or service. 
+- `controller` handles the HTTP request and response logic, while the `service` handles the business logic related to "todos"
+- If you don't write a constructor in your service files, NestJS will not be able to inject the `todoRepository` dependency correctly, causing runtime errors. Constructors are essential for enabling dependency injection in NestJS services.
+- When you inject dependencies into a service, you use the `this` keyword to access those dependencies within the service methods. 
+-  A `repository` is a class provided by TypeORM that acts as an intermediary between your application and the database.
+- `Entity manager` supposed to work with any entity, automatically find its repository and call its methods, whatever entity type are you passing.

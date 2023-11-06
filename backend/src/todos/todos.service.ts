@@ -5,7 +5,7 @@ import { Todo } from './entities/todo.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-@Injectable()
+@Injectable()  // define a class as a provider or service
 export class TodosService {
   constructor(
     @InjectRepository(Todo) private readonly todoRepository: Repository<Todo>,
