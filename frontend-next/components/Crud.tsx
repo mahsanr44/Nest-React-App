@@ -10,7 +10,7 @@ interface Task {
   taskname: string;
 }
 
-function App() {
+function Crud() {
   const [taskname, setTask] = useState("");
   const [fetchedTask, setFetchedTask] = useState<Task[]>([]);
 
@@ -24,7 +24,7 @@ function App() {
   };
 
   // API call for storing Task
-  const storeTask = (e: FormEvent) => {
+  const storeTask =async (e: FormEvent) => {
     e.preventDefault();
     const newTask = {
       taskname,
@@ -69,6 +69,21 @@ function App() {
 
       return;
     } else {
+  
+      const res = await fetch(`http://localhost:3000/api/crud`, {
+        method: "POST",
+        body: JSON.stringify({
+          taskname: newTask.taskname
+        }),
+      });
+  
+
+      if (!res.ok) {
+        throw new Error(`Error fetdeletingching data`);
+      }
+      setTask("")
+      await getTask();
+
       toast.success("Task Added Successfully!", {
         position: "top-right",
         autoClose: 5000,
@@ -80,77 +95,83 @@ function App() {
         theme: "dark",
       });
     }
-    axios
-      .post("http://localhost:3000/api/crud", newTask)
-      .then((response) => {
-        getTask();
-        setTask("");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
+}
   // API call for fetching Task
-  const getTask = () => {
-    axios
-      .get("http://localhost:3000/api/crud")
-      .then((response) => {
-        const data=response.data.result
-        setFetchedTask(data);
-      })
-      .catch((error) => {
-        console.error(error);
+  const getTask = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/crud", {
+        method: "GET",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
       });
+      if (!res.ok) {
+        throw new Error(`Error fetching data`);
+      }
+      const allTasks = await res.json();
+      const tasks = allTasks.result;
+     
+      setFetchedTask(tasks);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // API call for deleting Task
-  const deleteTask = (id: number) => {
-    axios
-      .delete(`http://localhost:4000/todos/${id}`)
-      .then((response) => {
-        toast.success("Task Deleted Successfully!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        getTask();
-      })
-      .catch((error) => {
-        console.error(error);
+  const deleteTask = async (id: number) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/crud/${id}`, {
+        method: "DELETE",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
       });
+      if (!res.ok) {
+        throw new Error(`Error deleting data`);
+      }
+      toast.success("Task Deleted Successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      getTask();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // API call for deleting all Tasks
-  const deleteAllTasks = () => {
-    axios
-      .delete(`http://localhost:3000/api/crud`)
-      .then((response) => {
-        console.log("All Tasks Deleted Successfully");
-        toast.success("All Tasks Deleted Successfully!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-        getTask();
-      })
-      .catch((error) => {
-        console.log(error);
+  const deleteAllTasks = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/crud", {
+        method: "DELETE",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
       });
+      if (!res.ok) {
+        throw new Error(`Error fetdeletingching data`);
+      }
+      toast.success("All Tasks Deleted Successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      getTask();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // API call for updating Task
-  const updateTask = (item: Task) => {
+  const updateTask = async (item: Task) => {
     const updatedTask = prompt("Enter Updated Task Name:", item.taskname);
     if (
       updatedTask === null ||
@@ -183,28 +204,33 @@ function App() {
       setTask("");
       return;
     }
-    const newUpdatedTask = {
-      taskname: updatedTask,
-    };
 
-    axios
-      .put(`http://localhost:4000/todos/${item.id}`, newUpdatedTask)
-      .then((response) => {
-        getTask();
-        toast.success("Task Updated Successfully!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      })
-      .catch((err) => {
-        console.error(err);
+    try {
+      const res = await fetch(`http://localhost:3000/api/crud/${item.id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          taskname: updatedTask,
+        }),
       });
+
+      if (!res.ok) {
+        throw new Error(`Error fetdeletingching data`);
+      }
+
+      await getTask();
+      toast.success("Task Updated Successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div>
@@ -224,7 +250,7 @@ function App() {
           <Button
             name={"Store Task"}
             handleClick={storeTask}
-            styleProp={"bg-green-500 border-green-700"}
+            styleProp={"bg-blue-500 border-blue-700 "}
           />
           <ToastContainer
             position="top-left"
@@ -257,7 +283,7 @@ function App() {
               <Button
                 name={"Edit"}
                 handleClick={() => updateTask(item)}
-                styleProp={"bg-green-500 border-green-700 w-16"}
+                styleProp={"bg-blue-500 border-blue-700  w-16"}
               />
               <Button
                 name={"Delete"}
@@ -285,4 +311,4 @@ function App() {
   );
 }
 
-export default App;
+export default Crud;

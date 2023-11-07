@@ -1,9 +1,9 @@
-import App from "@/components/App";
+import Crud from "@/components/Crud";
 
 export default function Home() {
   return (
     <div>
-      <App />
+      <Crud/>
     </div>
   );
 }
