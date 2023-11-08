@@ -3,7 +3,7 @@ import { ResultSetHeader } from "mysql2"; // Import the required type
 
 export async function POST(request: Request) {
   try {
-    const  {taskname}  = await request.json();
+    const { taskname } = await request.json();
     const updateTasks = (await query({
       query: "INSERT INTO todos (taskname) VALUES (?)",
       values: [taskname],
@@ -22,14 +22,14 @@ export async function POST(request: Request) {
   }
 }
 
- export const GET=async(request: Request)=>{
+export const GET = async (request: Request) => {
   // get all tasks
   try {
     const result = await query({
       query: "SELECT * FROM todos",
-      values:[]
+      values: [],
     });
-  
+
     return Response.json({
       result: result,
     });
@@ -38,14 +38,14 @@ export async function POST(request: Request) {
       error: error,
     });
   }
- }
+};
 
- export const DELETE=async()=>{
+export const DELETE = async () => {
   try {
-    const result = await query({
+    const result = (await query({
       query: "DELETE FROM todos",
-      values:[]
-    }) as ResultSetHeader;
+      values: [],
+    })) as ResultSetHeader;
     const newresult = result.affectedRows;
 
     console.log(newresult);
@@ -57,4 +57,4 @@ export async function POST(request: Request) {
       error: error,
     });
   }
- }
+};

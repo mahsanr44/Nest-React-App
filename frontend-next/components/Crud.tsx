@@ -24,7 +24,7 @@ function Crud() {
   };
 
   // API call for storing Task
-  const storeTask =async (e: FormEvent) => {
+  const storeTask = async (e: FormEvent) => {
     e.preventDefault();
     const newTask = {
       taskname,
@@ -38,7 +38,7 @@ function Crud() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
       });
 
       return;
@@ -51,7 +51,7 @@ function Crud() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
       });
       setTask("");
       return;
@@ -64,24 +64,22 @@ function Crud() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
       });
 
       return;
     } else {
-  
       const res = await fetch(`http://localhost:3000/api/crud`, {
         method: "POST",
         body: JSON.stringify({
-          taskname: newTask.taskname
+          taskname: newTask.taskname,
         }),
       });
-  
 
       if (!res.ok) {
         throw new Error(`Error fetdeletingching data`);
       }
-      setTask("")
+      setTask("");
       await getTask();
 
       toast.success("Task Added Successfully!", {
@@ -92,10 +90,10 @@ function Crud() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
       });
     }
-}
+  };
   // API call for fetching Task
   const getTask = async () => {
     try {
@@ -109,7 +107,7 @@ function Crud() {
       }
       const allTasks = await res.json();
       const tasks = allTasks.result;
-     
+
       setFetchedTask(tasks);
     } catch (error) {
       console.log(error);
@@ -135,7 +133,7 @@ function Crud() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
       });
       getTask();
     } catch (error) {
@@ -162,7 +160,7 @@ function Crud() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
       });
       getTask();
     } catch (error) {
@@ -186,7 +184,7 @@ function Crud() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
       });
       return;
     }
@@ -199,7 +197,7 @@ function Crud() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
       });
       setTask("");
       return;
@@ -226,7 +224,7 @@ function Crud() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "dark",
+        theme: "light",
       });
     } catch (error) {
       console.log(error);
@@ -235,12 +233,12 @@ function Crud() {
   return (
     <div>
       <div className="flex justify-center items-center mt-5 flex-col">
-        <h1 className="text-2xl font-bold mb-5 bg-gray-200 rounded-sm p-1">
+        <h1 className="text-2xl font-bold mb-5 bg-gray-800 rounded-sm p-1">
           Todo App
         </h1>
         <form className="flex items-center justify-center gap-1">
           <input
-            className="border-2 border-gray-700	rounded-md p-1"
+            className="border-2 border-gray-700	text-gray-600 rounded-md p-1"
             placeholder="✍️ Add Task"
             type="text"
             name="taskname"
@@ -262,7 +260,7 @@ function Crud() {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme="light"
+            theme="colored"
           />{" "}
         </form>
         <br />
@@ -277,7 +275,7 @@ function Crud() {
               className="flex gap-5 justify-center items-center m-3 "
             >
               <span className="font-semibold text-lg">{++index + ". "}</span>
-              <span className="mr-10 font-semibold text-lg text-gray-800">
+              <span className="mr-10 font-semibold text-lg ">
                 {item.taskname}
               </span>
               <Button
