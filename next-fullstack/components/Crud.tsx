@@ -1,6 +1,5 @@
 "use client";
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Button from "./Button";
@@ -265,7 +264,6 @@ function Crud() {
         </form>
         <br />
       </div>
-      <div className="flex justify-center items-center"></div>
       <div className="flex justify-center items-center flex-col mt-10">
         <h2 className="text-xl font-bold">Todo List:</h2>
         <ul>
